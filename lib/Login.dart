@@ -10,62 +10,78 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-
+  bool _isLoading = false;
+  bool testeErro = false;
   TextEditingController _urlController = TextEditingController();
   TextEditingController _userController = TextEditingController();
   TextEditingController __passwordController = TextEditingController();
-  //var _nomeHost = "";
 
 
   @override
   Widget build(BuildContext context) {
+
+
     // _login();
     return Scaffold(
       appBar: AppBar(
         title: Text("Teste api zabbix"),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              TextField(
-                controller: _urlController,
-                keyboardType: TextInputType.url,
-                obscureText: false,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Enter a url"
+      body:SingleChildScrollView(
+          child: Center(
+            child: _isLoading
+                ? Center(
+              child: CircularProgressIndicator(),
+            )
+                : Column(
+              children: <Widget>[
+                TextField(
+                  controller: _urlController,
+                  keyboardType: TextInputType.url,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Enter a url",
+                    errorText: testeErro ? "verdadeiro" : null
+                  ),
                 ),
-              ),
-              TextField(
-                controller: _userController,
-                keyboardType: TextInputType.url,
-                obscureText: false,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Usuário"
+                TextField(
+                  controller: _userController,
+                  keyboardType: TextInputType.url,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Usuário"
+                  ),
                 ),
-              ),
-              TextField(
-                controller: __passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Senha"
+                TextField(
+                  controller: __passwordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Senha"
+                  ),
                 ),
-              ),
-              RaisedButton(
-                child: Text("Login"),
-                onPressed: (){
-                  Api.login(_urlController.text, _userController.text, __passwordController.text);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-                },
-              ),
-            ],
-          ),
-        ),
-      )
+                RaisedButton(
+                  child: Text("Login"),
+                  onPressed: () async{
+                    setState(() => _isLoading = true);
+                    Api api = Api(url: _urlController.text);
+                    var res = await api.login(_userController.text, __passwordController.text);
+                    print(api.url);
+                    setState(() => _isLoading = false);
+                    api = Api.fromJson(res,api);
+                    print(api.token);
+                    print(api.url);
+                    if (api != null){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(api: api)));
+                    }
+                  },
+                ),
+              ],
+            ),
+          )
+      ),
     );
   }
 }
