@@ -1,111 +1,72 @@
 import 'dart:convert';
 import 'dart:io';
 
-class Api
-{
-  static String _url;
-  static String _token;
+class Api {
 
-  static login(String url,String user,String password) async {
+   String url;
+   String token;
 
-   Api._url  = url;
-    HttpClient client = new HttpClient();
-    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+   Api({this.url,this.token});
 
-    //String url ='https://zabbix.karyon.com.br/api_jsonrpc.php'; //externo
 
-    Map body = {
-      "jsonrpc": "2.0",
-      "method": "user.login",
-      "params": {
-        "user": user,
-        "password": password
-      },
-      "id": 1,
-    };
-
-    HttpClientRequest request = await client.postUrl(Uri.parse(url));
-
-    request.headers.set('content-type', 'application/json-rpc');
-
-    request.add(utf8.encode(json.encode(body)));
-
-    HttpClientResponse response = await request.close();
-
-    String stringResult = await response.transform(utf8.decoder).join();
-    Map mapResult = json.decode(stringResult);
-    print(mapResult);
-    print(mapResult["result"]);
-    _token = mapResult["result"];
-
-  }
-
-  static logout() async
+   inicializa(Map body) async
   {
 
     HttpClient client = new HttpClient();
-    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-
-    //String url ='https://zabbix.karyon.com.br/api_jsonrpc.php'; //externo
-
-    Map body = {
-      "jsonrpc": "2.0",
-      "method": "user.logout",
-      "params": [],
-      "id": 1,
-      "auth": _token
-    };
-
-    HttpClientRequest request = await client.postUrl(Uri.parse(Api._url));
-
+    client.badCertificateCallback =
+    ((X509Certificate cert, String host, int port) => true);
+    HttpClientRequest request = await client.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json-rpc');
-
     request.add(utf8.encode(json.encode(body)));
-
     HttpClientResponse response = await request.close();
-
     String stringResult = await response.transform(utf8.decoder).join();
-    Map <String, dynamic> mapResult = json.decode(stringResult);
-    print(mapResult["result"]);
+    Map mapResult = json.decode(stringResult);
+    print(mapResult.toString());
+    return mapResult;
+  }
+
+
+   Future<dynamic> login(String user, String password) async {
+
+     Map body = Api().loginToJson(user, password);
+     return inicializa(body);
+
+  }
+    Future<dynamic> logout() async {
+    Map body = logoutToJson();
+    return inicializa(body);
 
   }
 
-  static  getHosts(String nome) async {
+   factory Api.fromJson(Map<String, dynamic> parsedJson,Api api){
+     Map json = parsedJson;
+     return Api(token: json["result"], url: api.url);
+   }
 
-    HttpClient client = new HttpClient();
-    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+   Map loginToJson(String user, String password )
+   {
+     Map body = {
+       "jsonrpc": "2.0",
+       "method": "user.login",
+       "params": {
+         "user": user,
+         "password": password
+       },
+       "id": 1,
+     };
+     return body;
+   }
 
-    //String url ='https://zabbix.karyon.com.br/api_jsonrpc.php'; //externo
+   Map logoutToJson()
+   {
+     Map body = {
+       "jsonrpc": "2.0",
+       "method": "user.logout",
+       "params": [],
+       "id": 1,
+       "auth": token
+     };
+     return body;
+   }
 
-    Map body = {
-      "jsonrpc": "2.0",
-      "method": "host.get",
-      "params": {
-        "filter": {
-          "host": [
-            nome
-          ]
-        }
-      },
-      "auth": _token,
-      "id": 1
-    };
-
-    HttpClientRequest request = await client.postUrl(Uri.parse(Api._url));
-
-    request.headers.set('content-type', 'application/json-rpc');
-
-    request.add(utf8.encode(json.encode(body)));
-
-    HttpClientResponse response = await request.close();
-
-    String stringResult = await response.transform(utf8.decoder).join();
-    Map <String,dynamic> mapResult = json.decode(stringResult);
-
-    for (var host in mapResult["result"])
-      {
-        print(host["hostid"]);
-        return host["hostid"];
-      }
-  }
 }
