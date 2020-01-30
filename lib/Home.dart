@@ -1,6 +1,10 @@
 import 'package:api_zabbix/Api.dart';
 import 'package:api_zabbix/Login.dart';
+import 'package:api_zabbix/model/Event.dart';
+import 'package:api_zabbix/model/EventList.dart';
 import 'package:api_zabbix/model/HostGroup.dart';
+import 'package:api_zabbix/model/HostGroupList.dart';
+import 'package:api_zabbix/model/Trigger.dart';
 import 'package:flutter/material.dart';
 
 
@@ -23,9 +27,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-
     HostGroup hostGroup = HostGroup(api: widget.api);
+    Event event = Event(api: widget.api);
+    Trigger trigger = Trigger(api: widget.api);
+    //List<HostGroup> hostgroups;
+    //Host host = Host(widget.api.url,widget.api.token);
     print(widget.api.url+widget.api.token);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
@@ -48,11 +56,41 @@ class _HomeState extends State<Home> {
             RaisedButton(
               child: Text("Buscar hosts"),
               onPressed: () async{
-                var res = await hostGroup.getHostGroups();
-                if(res != null)
+                List<dynamic> hostgroups = await hostGroup.getHostGroupsToJson();
+                var teste;
+                for ( teste in hostgroups)
                   {
-                    HostGroup.fromJson(res);
+                    print(teste["name"]);
                   }
+                //var res = await host.getHosts();
+                if(hostgroups != null)
+                  {
+                    HostGroupList.fromJson(hostgroups,widget.api);
+                  }
+              },
+            ),
+            RaisedButton(
+              child: Text("Event get"),
+              onPressed: () async{
+                List<dynamic> events = await event.getEvents();
+                for(var teste in events)
+                  {
+                    print(teste);
+                  }
+                if(events!=null)
+                  EventList.fromJson(events, widget.api);
+              },
+            ),
+            RaisedButton(
+              child: Text("Trigger get"),
+              onPressed: () async{
+                List<dynamic> triggers = await trigger.getTrigger();
+                for(var teste in triggers)
+                {
+                  print(teste);
+                }
+                if(triggers!=null)
+                  EventList.fromJson(triggers, widget.api);
               },
             ),
             Text(

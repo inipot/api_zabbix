@@ -20,8 +20,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
 
-
-    // _login();
     return Scaffold(
       appBar: AppBar(
         title: Text("Teste api zabbix"),
@@ -66,7 +64,7 @@ class _LoginState extends State<Login> {
                   child: Text("Login"),
                   onPressed: () async{
                     setState(() => _isLoading = true);
-                    Api api = Api(url: _urlController.text);
+                    Api api = Api(url: "https://zabbix.karyon.com.br/api_jsonrpc.php");
                     var res = await api.login(_userController.text, __passwordController.text);
                     print(api.url);
                     setState(() => _isLoading = false);

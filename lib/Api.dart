@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+
 class Api {
 
    String url;
    String token;
-
    Api({this.url,this.token});
 
 
@@ -21,7 +21,7 @@ class Api {
     HttpClientResponse response = await request.close();
     String stringResult = await response.transform(utf8.decoder).join();
     Map mapResult = json.decode(stringResult);
-    print(mapResult.toString());
+    //print(mapResult.toString());
     return mapResult;
   }
 
@@ -68,5 +68,7 @@ class Api {
      };
      return body;
    }
+
+
 
 }

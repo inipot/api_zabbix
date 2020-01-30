@@ -4,12 +4,21 @@ import 'package:api_zabbix/model/HostGroup.dart';
 class Host{
 
   Api api;
-  List<HostGroup> hostGroups = [];
+  String id;
+  String nome;
 
-  Host({this.api});
+  Host({this.id,this.nome,this.api});
 
 
-  Future<dynamic> getHosts() async {
+  factory Host.fromJson(Map<String, dynamic> parsedJson, Api api){
+
+    Map json = parsedJson["result"];
+    return Host(nome: json["name"], id: json["groupid"], api: api);
+  }
+
+  List<HostGroup> hostGroups;
+
+  Future<dynamic> getHostsByName(List<String> nomes) async {
 
     HostGroup h1 = HostGroup(nome: "Zabbix server");
     HostGroup h2 = HostGroup(nome: "KUROMORI");
@@ -24,7 +33,7 @@ class Host{
          i++;
       }
 
-    //teste = [hostGroups[0].nome,hostGroups[1].nome];
+    teste = [hostGroups[0].nome,hostGroups[1].nome];
 
     print(api.token);
     Map body = {
@@ -32,7 +41,7 @@ class Host{
       "method": "host.get",
       "params": {
         "filter": {
-          "host": teste
+          "host": "KUROMORI"
         }
       },
       "auth": api.token,
