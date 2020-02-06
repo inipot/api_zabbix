@@ -20,20 +20,20 @@ class Host{
 
   Future<dynamic> getHostsByName(List<String> nomes) async {
 
-    HostGroup h1 = HostGroup(nome: "Zabbix server");
-    HostGroup h2 = HostGroup(nome: "KUROMORI");
-    hostGroups.add(h1);
-    hostGroups.add(h2);
-
-    var teste;
-    int i = 0;
-    for( teste in hostGroups)
-      {
-         teste = hostGroups[i].nome;
-         i++;
-      }
-
-    teste = [hostGroups[0].nome,hostGroups[1].nome];
+//    HostGroup h1 = HostGroup(nome: "Zabbix server");
+//    HostGroup h2 = HostGroup(nome: "KUROMORI");
+//    hostGroups.add(h1);
+//    hostGroups.add(h2);
+//
+//    var teste;
+//    int i = 0;
+//    for( teste in hostGroups)
+//      {
+//         teste = hostGroups[i].nome;
+//         i++;
+//      }
+//
+//    teste = [hostGroups[0].nome,hostGroups[1].nome];
 
     print(api.token);
     Map body = {

@@ -1,5 +1,4 @@
 import 'package:api_zabbix/model/Trigger.dart';
-
 import '../Api.dart';
 
 class TriggerList

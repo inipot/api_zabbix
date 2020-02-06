@@ -65,7 +65,8 @@ class _LoginState extends State<Login> {
                   onPressed: () async{
                     setState(() => _isLoading = true);
                     Api api = Api(url: "https://zabbix.karyon.com.br/api_jsonrpc.php");
-                    var res = await api.login(_userController.text, __passwordController.text);
+                    //Api api = Api(url: "http://infrazbx01.evtec.karyon.com.br/zabbix/api_jsonrpc.php");
+                    var res = await api.login("convidado", __passwordController.text);
                     print(api.url);
                     setState(() => _isLoading = false);
                     api = Api.fromJson(res,api);

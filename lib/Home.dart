@@ -5,6 +5,7 @@ import 'package:api_zabbix/model/EventList.dart';
 import 'package:api_zabbix/model/HostGroup.dart';
 import 'package:api_zabbix/model/HostGroupList.dart';
 import 'package:api_zabbix/model/Trigger.dart';
+import 'package:api_zabbix/model/TriggerList.dart';
 import 'package:flutter/material.dart';
 
 
@@ -23,6 +24,8 @@ class _HomeState extends State<Home> {
   bool _isLoading = false;
   TextEditingController _hostNameController = TextEditingController();
   var _nomeHost ="Resultado";
+  List<String> lastEventList ;
+  List<String> listaEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,11 @@ class _HomeState extends State<Home> {
     HostGroup hostGroup = HostGroup(api: widget.api);
     Event event = Event(api: widget.api);
     Trigger trigger = Trigger(api: widget.api);
+    EventList  listaEventos ;
+    TriggerList listaTrigger;
+    lastEventList = [];
+    listaEvent = [];
+
     //List<HostGroup> hostgroups;
     //Host host = Host(widget.api.url,widget.api.token);
     print(widget.api.url+widget.api.token);
@@ -72,25 +80,45 @@ class _HomeState extends State<Home> {
             RaisedButton(
               child: Text("Event get"),
               onPressed: () async{
-                List<dynamic> events = await event.getEvents();
+                List<dynamic> events = await event.getEventsByEventId(lastEventList);
                 for(var teste in events)
                   {
                     print(teste);
                   }
                 if(events!=null)
-                  EventList.fromJson(events, widget.api);
+                  {
+                    listaEventos = EventList.fromJson(events, widget.api);
+
+                    for(int i = 0; i < events.length;i++)
+                      {
+                        listaEvent.add(listaEventos.events[i].triggerId);
+                        print(listaEvent[i]);
+                      }
+                  }
               },
             ),
             RaisedButton(
               child: Text("Trigger get"),
               onPressed: () async{
-                List<dynamic> triggers = await trigger.getTrigger();
+                List<dynamic> triggers = await trigger.getTriggerWithProblemWithLastEvent();
                 for(var teste in triggers)
                 {
-                  print(teste);
+                  //print(teste);
                 }
                 if(triggers!=null)
-                  EventList.fromJson(triggers, widget.api);
+                  {
+                    //var lista1;
+                    listaTrigger = TriggerList.fromJson(triggers, widget.api);
+                    int aux = 0;
+                    for (var i in triggers )
+                      {
+                        print(listaTrigger.triggers[aux].lastEvent);
+                        lastEventList.insert(aux, listaTrigger.triggers[aux].lastEvent);
+                        //lastEventList.add(listaTrigger.triggers[aux].lastEvent);
+                        aux++;
+                        //print(listaTrigger.triggers[i].lastEvent);
+                      }
+                  }
               },
             ),
             Text(
@@ -104,7 +132,8 @@ class _HomeState extends State<Home> {
                 setState(() => _isLoading = false);
                 if(logout["result"].toString() == "true")
                 {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                  //Navigator.pop(context);
                 }
               },
             ),

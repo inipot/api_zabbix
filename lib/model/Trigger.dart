@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:api_zabbix/Api.dart';
 
 class Trigger
@@ -9,14 +8,17 @@ class Trigger
   String description;
   String expression;
   Api api;
+  String lastEvent;
 
-  Trigger({this.id,this.description,this.expression,this.api});
+  Trigger({this.id,this.description,this.expression,this.lastEvent,this.api});
 
   factory Trigger.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
     //print(json.toString());
-    return Trigger(id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["description"],api: api);
+    return Trigger
+      (id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["description"],
+        lastEvent: parsedJson["lastEvent"]["eventid"],api: api);
   }
 
   inicializa(Map body) async
@@ -36,19 +38,19 @@ class Trigger
     return mapResult["result"];
   }
 
-  getTrigger()
+  getTriggerWithProblemWithLastEvent()
   {
     Map body = {
       "jsonrpc": "2.0",
       "method": "trigger.get",
       "params": {
-        "triggerids": ["123416","123432"],
+        //"triggerids": ["124938"],
         "output": "extend",
-//        "filter":{
-//          "value": 1
-//        },
-        //"selectLastEvent": "extend",
-        "selectHosts": "extend",
+        "filter":{
+          "value": 1
+        },
+        "selectLastEvent": "extend",
+        //"selectHosts": "extend",
         "sortfield": "priority",
         "sortorder": "DESC"
       },
