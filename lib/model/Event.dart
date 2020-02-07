@@ -7,15 +7,16 @@ class Event
 {
   String id;
   String triggerId;
+  String name;
   Api api;
 
-  Event({this.api,this.triggerId,this.id});
+  Event({this.api,this.triggerId,this.id,this.name});
 
   factory Event.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
     //print(json.toString());
-    return Event(id: parsedJson["eventid"],triggerId: parsedJson["objectid"],api: api);
+    return Event(id: parsedJson["eventid"],triggerId: parsedJson["objectid"],name: parsedJson["name"],api: api);
   }
 
   inicializa(Map body) async
@@ -34,7 +35,6 @@ class Event
     Map mapResult = json.decode(stringResult);
     return mapResult["result"];
   }
-
 
 
    getEventsByEventId(List eventId) async

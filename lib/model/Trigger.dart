@@ -1,25 +1,28 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:api_zabbix/Api.dart';
+import 'package:api_zabbix/model/HostList.dart';
 
 class Trigger
 {
   String id;
   String description;
   String expression;
+  HostList hosts;
   Api api;
   String lastEvent;
 
-  Trigger({this.id,this.description,this.expression,this.lastEvent,this.api});
+  Trigger({this.id,this.description,this.expression,this.lastEvent,this.hosts,this.api});
 
   factory Trigger.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
-    //print(json.toString());
+    //print(parsedJson["hosts"][0]["hostid"].toString());
     return Trigger
       (id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["description"],
-        lastEvent: parsedJson["lastEvent"]["eventid"],api: api);
+        lastEvent: parsedJson["lastEvent"]["eventid"],hosts: HostList.fromJson(parsedJson["hosts"], api),api: api);
   }
+
 
   inicializa(Map body) async
   {
@@ -50,7 +53,7 @@ class Trigger
           "value": 1
         },
         "selectLastEvent": "extend",
-        //"selectHosts": "extend",
+        "selectHosts": "extend",
         "sortfield": "priority",
         "sortorder": "DESC"
       },
