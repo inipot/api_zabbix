@@ -29,7 +29,7 @@ class Event
     request.headers.set('content-type', 'application/json-rpc');
     request.add(utf8.encode(json.encode(body)));
     HttpClientResponse response = await request.close();
-    print(response.statusCode);
+    //print(response.statusCode);
     String stringResult = await response.transform(utf8.decoder).join();
     //print(stringResult);
     Map mapResult = json.decode(stringResult);
@@ -39,7 +39,7 @@ class Event
 
    getEventsByEventId(List eventId) async
   {
-    print(api.token);
+    //print(api.token);
     Map body = {
       "jsonrpc": "2.0",
       "method": "event.get",
@@ -59,7 +59,7 @@ class Event
     };
 
     var resultado =  inicializa(body);
-    print(resultado);
+    //print(resultado);
     return resultado;
   }
 

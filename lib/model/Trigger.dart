@@ -34,7 +34,7 @@ class Trigger
     request.headers.set('content-type', 'application/json-rpc');
     request.add(utf8.encode(json.encode(body)));
     HttpClientResponse response = await request.close();
-    print(response.statusCode);
+    //print(response.statusCode);
     String stringResult = await response.transform(utf8.decoder).join();
     //print(stringResult);
     Map mapResult = json.decode(stringResult);
@@ -62,7 +62,7 @@ class Trigger
     };
 
     var resultado = inicializa(body);
-    print(resultado);
+    //print(resultado);
     return resultado;
   }
 
