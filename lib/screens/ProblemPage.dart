@@ -1,10 +1,11 @@
 import 'package:api_zabbix/Api.dart';
-import 'package:api_zabbix/Login.dart';
+import 'package:api_zabbix/screens/LoginPage.dart';
 import 'package:api_zabbix/model/Event.dart';
 import 'package:api_zabbix/model/EventList.dart';
 import 'package:api_zabbix/model/Trigger.dart';
 import 'package:flutter/material.dart';
 import 'package:api_zabbix/model/TriggerList.dart';
+import 'package:intl/intl.dart';
 
 class PageProblem extends StatefulWidget {
 
@@ -18,6 +19,14 @@ class _PageProblemState extends State<PageProblem> {
 
   bool _isLoading = false;
 
+  converterTimestampParaDateTime(String lastChange)
+  {
+    print(lastChange);
+    var date = DateTime.fromMillisecondsSinceEpoch((int.parse(lastChange))*1000,isUtc: false);
+    print(date);
+    print(DateFormat.yMd().add_jms().format(date));
+    return DateFormat.yMd().add_jms().format(date);
+  }
 
   Future<TriggerList>recuperarTriggers() async
   {
@@ -77,7 +86,7 @@ class _PageProblemState extends State<PageProblem> {
                               TriggerList list = snapshot.data;
                               var trigger = list.triggers[index];
                               return ListTile(
-                                title: Text(trigger.hosts.hosts[0].nome),
+                                title: Text(trigger.hosts.hosts[0].nome+" "+converterTimestampParaDateTime(trigger.lastChange).toString()),
                                 subtitle: Text(trigger.description.replaceAll("{HOST.NAME}", trigger.hosts.hosts[0].nome)),
                               );
                             }
@@ -106,7 +115,7 @@ class _PageProblemState extends State<PageProblem> {
             var logout = await widget.api.logout();
             setState(() => _isLoading = true );
             if(logout["result"].toString() == "true")
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
           },
         )
         ],

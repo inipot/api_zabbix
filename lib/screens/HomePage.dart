@@ -4,18 +4,18 @@ import 'package:api_zabbix/screens/ProblemPage.dart';
 import 'package:flutter/material.dart';
 
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
 
-  Home({@required this.api});
+  HomePage({@required this.api});
 
   final Api api;
   //final Host host;
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
 
   bool _isLoading = false;
   TextEditingController _hostNameController = TextEditingController();

@@ -6,7 +6,8 @@ class Api {
 
    String url;
    String token;
-   Api({this.url,this.token});
+   String erro;
+   Api({this.url,this.token,this.erro});
 
 
    inicializa(Map body) async
@@ -21,7 +22,7 @@ class Api {
     HttpClientResponse response = await request.close();
     String stringResult = await response.transform(utf8.decoder).join();
     Map mapResult = json.decode(stringResult);
-    //print(mapResult.toString());
+    print(mapResult.toString());
     return mapResult;
   }
 
@@ -40,7 +41,13 @@ class Api {
 
    factory Api.fromJson(Map<String, dynamic> parsedJson,Api api){
      Map json = parsedJson;
-     return Api(token: json["result"], url: api.url);
+     print("teste"+parsedJson["result"].toString());
+
+     if(parsedJson["result"] != null)
+       return Api(token: parsedJson["result"], url: api.url);
+     else
+     return Api(erro: parsedJson["error"]["data"]);
+
    }
 
    Map loginToJson(String user, String password )

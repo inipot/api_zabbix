@@ -11,8 +11,9 @@ class Trigger
   HostList hosts;
   Api api;
   String lastEvent;
+  String lastChange;
 
-  Trigger({this.id,this.description,this.expression,this.lastEvent,this.hosts,this.api});
+  Trigger({this.id,this.description,this.expression,this.lastEvent,this.lastChange,this.hosts,this.api});
 
   factory Trigger.fromJson(Map<String, dynamic> parsedJson, Api api){
 
@@ -20,7 +21,8 @@ class Trigger
     //print(parsedJson["hosts"][0]["hostid"].toString());
     return Trigger
       (id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["description"],
-        lastEvent: parsedJson["lastEvent"]["eventid"],hosts: HostList.fromJson(parsedJson["hosts"], api),api: api);
+        lastEvent: parsedJson["lastEvent"]["eventid"],lastChange: (parsedJson["lastchange"]),
+        hosts: HostList.fromJson(parsedJson["hosts"], api),api: api);
   }
 
 
@@ -36,7 +38,7 @@ class Trigger
     HttpClientResponse response = await request.close();
     //print(response.statusCode);
     String stringResult = await response.transform(utf8.decoder).join();
-    //print(stringResult);
+    print(stringResult);
     Map mapResult = json.decode(stringResult);
     return mapResult["result"];
   }
@@ -54,7 +56,7 @@ class Trigger
         },
         "selectLastEvent": "extend",
         "selectHosts": "extend",
-        "sortfield": "priority",
+        "sortfield": "lastchange",
         "sortorder": "DESC"
       },
       "auth": api.token,
@@ -62,7 +64,7 @@ class Trigger
     };
 
     var resultado = inicializa(body);
-    //print(resultado);
+    print(resultado);
     return resultado;
   }
 
