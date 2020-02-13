@@ -1,22 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:api_zabbix/Api.dart';
+import 'package:api_zabbix/model/AcknowledgeList.dart';
 
 
 class Event
 {
   String id;
   String triggerId;
-  String name;
+  String acknowledged;
+  AcknowledgeList acknowledges;
   Api api;
 
-  Event({this.api,this.triggerId,this.id,this.name});
+  Event({this.api,this.triggerId,this.id,this.acknowledged,this.acknowledges});
 
   factory Event.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
     //print(json.toString());
-    return Event(id: parsedJson["eventid"],triggerId: parsedJson["objectid"],name: parsedJson["name"],api: api);
+    return Event(id: parsedJson["eventid"],triggerId: parsedJson["objectid"],
+        acknowledges: AcknowledgeList.fromJson(parsedJson["acknowledges"], api),acknowledged: parsedJson["acknowledged"],api: api);
   }
 
   inicializa(Map body) async
@@ -31,7 +34,7 @@ class Event
     HttpClientResponse response = await request.close();
     //print(response.statusCode);
     String stringResult = await response.transform(utf8.decoder).join();
-    //print(stringResult);
+    print(stringResult);
     Map mapResult = json.decode(stringResult);
     return mapResult["result"];
   }
@@ -46,13 +49,13 @@ class Event
       "params": {
         "eventids": eventId,
         "output": "extend",
-        "selectHosts": "extend",
+        //"selectHosts": "extend",
         "select_acknowledges": "extend",
         //"selectTags": "extend",
         //"objectids": ["124938"],
         //"severities" : 5,
-        //"sortfield": ["clock", "eventid"],
-        //"sortorder": "DESC"
+        "sortfield": ["clock", "eventid"],
+        "sortorder": "DESC"
       },
       "auth": api.token,
       "id": 1

@@ -17,8 +17,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  bool _isLoading = false;
-  TextEditingController _hostNameController = TextEditingController();
+  //bool _isLoading = false;
+  //TextEditingController _hostNameController = TextEditingController();
   int _indexAtual = 0;
   //List<String> lastEventList;
   //List<String> listaEvent;
@@ -33,11 +33,10 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Zabbix App"),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xffd40000),
       ),
       body: Container(
         padding: EdgeInsets.all(10),

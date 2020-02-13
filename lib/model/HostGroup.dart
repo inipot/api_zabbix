@@ -52,4 +52,24 @@ class HostGroup
    print(resultado);
    return resultado;
   }
+
+  getHostGroupsByHostnameToJson(String hostids) async {
+
+    print(api.token);
+    Map body = {
+      "jsonrpc": "2.0",
+      "method": "hostgroup.get",
+      "params": {
+        "output": "extend",
+        "hostids": [hostids],
+      },
+      "auth": api.token,
+      "id": 1
+    };
+
+    var resultado = inicializa(body);
+    print(resultado);
+    return resultado;
+  }
+
 }

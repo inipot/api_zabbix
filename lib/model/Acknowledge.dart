@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:api_zabbix/Api.dart';
 import 'package:api_zabbix/model/Event.dart';
 import 'package:api_zabbix/model/Trigger.dart';

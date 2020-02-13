@@ -1,4 +1,6 @@
 import 'package:api_zabbix/Api.dart';
+import 'package:api_zabbix/model/AcknowledgeList.dart';
+import 'package:api_zabbix/screens/AcknowledgePage.dart';
 import 'package:api_zabbix/screens/LoginPage.dart';
 import 'package:api_zabbix/model/Event.dart';
 import 'package:api_zabbix/model/EventList.dart';
@@ -18,7 +20,8 @@ class PageProblem extends StatefulWidget {
 class _PageProblemState extends State<PageProblem> {
 
   bool _isLoading = false;
-
+  EventList listaEventos;
+  AcknowledgeList acknowledgeList;
   converterTimestampParaDateTime(String lastChange)
   {
     print(lastChange);
@@ -33,9 +36,10 @@ class _PageProblemState extends State<PageProblem> {
 
     Trigger trigger = Trigger(api: widget.api);
     Event event = Event(api: widget.api);
+    //Acknowledge acknowledge = Acknowledge(api: widget.api);
     TriggerList listaTrigger;
     List<String> lastEventList;
-    EventList listaEventos;
+
     lastEventList = [];
     //listaEvent = [];
     List<dynamic> triggers = await trigger.getTriggerWithProblemWithLastEvent();
@@ -50,9 +54,34 @@ class _PageProblemState extends State<PageProblem> {
     List<dynamic> events = await event.getEventsByEventId(lastEventList);
     if(events!=null)
       listaEventos = EventList.fromJson(events, widget.api);
+    print("lista eventos"+listaEventos.events[1].id);
+//    List<dynamic> acknowledges = await event.getEventsByEventId(lastEventList);
+//    if(acknowledges!=null)
+//      {
+//        if(event)
+//        acknowledgeList = AcknowledgeList.fromJson(acknowledges, widget.api);
+//        print("lista eventos"+acknowledgeList.acknowledges[0].message);
+//      }
+
     //print(listaTrigger.triggers[0].host);
 
     return listaTrigger;
+  }
+
+  Color getColorIcon(Trigger trigger)
+  {
+    if(trigger.priority == "0")
+      return Color(0xff97AAB3);
+    else if(trigger.priority == "1")
+      return Color(0xff7499FF);
+    else if(trigger.priority == "2")
+      return Color(0xffFFC859);
+    else if(trigger.priority == "3")
+      return Color(0xffFFA059);
+    else if (trigger.priority == "4")
+      return Color(0xffE97659);
+    else
+      return Color(0xffE45959);
   }
 
   @override
@@ -80,14 +109,29 @@ class _PageProblemState extends State<PageProblem> {
                       }
                       else{
                         print("Lista carregou");
-                        return ListView.builder(
+                        return ListView.separated(
+                          separatorBuilder: (context,index)=> Divider(
+                            color: Colors.black,
+                          ),
                             itemCount: snapshot.data.triggers.length,
                             itemBuilder: (context,index){
+                            print(index);
                               TriggerList list = snapshot.data;
                               var trigger = list.triggers[index];
                               return ListTile(
-                                title: Text(trigger.hosts.hosts[0].nome+" "+converterTimestampParaDateTime(trigger.lastChange).toString()),
-                                subtitle: Text(trigger.description.replaceAll("{HOST.NAME}", trigger.hosts.hosts[0].nome)),
+                                contentPadding: EdgeInsets.only(top: 6, bottom: 6),
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AcknowledgePage(api: widget.api,host: trigger.hosts.hosts[0],trigger: trigger,event: listaEventos.events[index])));
+                                },
+                                leading: Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                    Icons.warning,
+                                    color: getColorIcon(trigger),
+                                  ),
+                                ),
+                                title: Text(trigger.description.replaceAll("{HOST.NAME}", trigger.hosts.hosts[0].nome)),
+                                subtitle: Text(trigger.hosts.hosts[0].nome+" "+converterTimestampParaDateTime(trigger.lastChange).toString()),
                               );
                             }
                         );
@@ -97,18 +141,6 @@ class _PageProblemState extends State<PageProblem> {
                 }
             ),
           ),
-//          RaisedButton(
-//            child: Text("Log out"),
-//            onPressed: () async{
-//              setState(() => _isLoading = true);
-//              var logout = await widget.api.logout();
-//              setState(() => _isLoading = false);
-//              if(logout["result"].toString() == "true")
-//              {
-//                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
-//              }
-//            },
-//          ),
         RaisedButton(
           child: Text("Logout"),
           onPressed: ()async{
@@ -120,98 +152,6 @@ class _PageProblemState extends State<PageProblem> {
         )
         ],
       ),
-      //margin: EdgeInsets.all(16),
-//        child: _isLoading
-//            ? CircularProgressIndicator()
-//            : Column(
-//          children: <Widget>[
-//            TextField(
-//              controller: _hostNameController,
-//              keyboardType: TextInputType.url,
-//              obscureText: false,
-//              decoration: InputDecoration(
-//                  border: OutlineInputBorder(),
-//                  hintText: "Enter a hostname"
-//              ),
-//            ),
-//            RaisedButton(
-//              child: Text("Buscar hosts"),
-//              onPressed: () async{
-//                List<dynamic> hostgroups = await hostGroup.getHostGroupsToJson();
-//                var teste;
-//                for ( teste in hostgroups)
-//                  {
-//                    print(teste["name"]);
-//                  }
-//                //var res = await host.getHosts();
-//                if(hostgroups != null)
-//                  {
-//                    HostGroupList.fromJson(hostgroups,widget.api);
-//                  }
-//              },
-//            ),
-//            RaisedButton(
-//              child: Text("Event get"),
-//              onPressed: () async{
-//                List<dynamic> events = await event.getEventsByEventId(lastEventList);
-//                for(var teste in events)
-//                  {
-//                    print(teste);
-//                  }
-//                if(events!=null)
-//                  {
-//                    listaEventos = EventList.fromJson(events, widget.api);
-//
-//                    for(int i = 0; i < events.length;i++)
-//                      {
-//                        listaEvent.add(listaEventos.events[i].triggerId);
-//                        print(listaEvent[i]);
-//                      }
-//                  }
-//              },
-//            ),
-//            RaisedButton(
-//              child: Text("Trigger get"),
-//              onPressed: () async{
-//                List<dynamic> triggers = await trigger.getTriggerWithProblemWithLastEvent();
-//                for(var teste in triggers)
-//                {
-//                  //print(teste);
-//                }
-//                if(triggers!=null)
-//                  {
-//                    //var lista1;
-//                    listaTrigger = TriggerList.fromJson(triggers, widget.api);
-//                    int aux = 0;
-//                    for (var i in triggers )
-//                      {
-//                        print(listaTrigger.triggers[aux].lastEvent);
-//                        lastEventList.insert(aux, listaTrigger.triggers[aux].lastEvent);
-//                        //lastEventList.add(listaTrigger.triggers[aux].lastEvent);
-//                        aux++;
-//                        //print(listaTrigger.triggers[i].lastEvent);
-//                      }
-//                  }
-//              },
-//            ),
-//            Text(
-//                _nomeHost
-//            ),
-//            RaisedButton(
-//              child: Text("Log out"),
-//              onPressed: () async{
-//                setState(() => _isLoading = true);
-//                var logout = await widget.api.logout();
-//                setState(() => _isLoading = false);
-//                if(logout["result"].toString() == "true")
-//                {
-//                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
-//                  //Navigator.pop(context);
-//                }
-//              },
-//            ),
-//          ],
-//        ),
     );
   }
 }

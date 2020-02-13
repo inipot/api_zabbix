@@ -1,5 +1,4 @@
 import 'package:api_zabbix/Api.dart';
-import 'package:api_zabbix/model/HostGroup.dart';
 
 class Host{
 
@@ -13,10 +12,10 @@ class Host{
   factory Host.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
-    return Host(nome: parsedJson["name"], id: parsedJson["groupid"], api: api);
+    //print(json);
+    return Host(nome: parsedJson["host"], id: parsedJson["hostid"],api: api);
   }
 
-  List<HostGroup> hostGroups;
 
   Future<dynamic> getHosts() async {
 

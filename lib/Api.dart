@@ -40,7 +40,6 @@ class Api {
   }
 
    factory Api.fromJson(Map<String, dynamic> parsedJson,Api api){
-     Map json = parsedJson;
      print("teste"+parsedJson["result"].toString());
 
      if(parsedJson["result"] != null)

@@ -8,21 +8,22 @@ class Trigger
   String id;
   String description;
   String expression;
+  String priority;
   HostList hosts;
   Api api;
   String lastEvent;
   String lastChange;
 
-  Trigger({this.id,this.description,this.expression,this.lastEvent,this.lastChange,this.hosts,this.api});
+  Trigger({this.id,this.description,this.expression,this.lastEvent,this.lastChange,this.priority,this.hosts,this.api});
 
   factory Trigger.fromJson(Map<String, dynamic> parsedJson, Api api){
 
     //Map json = parsedJson["result"];
     //print(parsedJson["hosts"][0]["hostid"].toString());
     return Trigger
-      (id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["description"],
+      (id: parsedJson["triggerid"],description: parsedJson["description"],expression: parsedJson["expression"],
         lastEvent: parsedJson["lastEvent"]["eventid"],lastChange: (parsedJson["lastchange"]),
-        hosts: HostList.fromJson(parsedJson["hosts"], api),api: api);
+        hosts: HostList.fromJson(parsedJson["hosts"], api),priority: parsedJson["priority"],api: api);
   }
 
 

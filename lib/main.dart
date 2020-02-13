@@ -10,8 +10,7 @@ void main()
     theme: ThemeData(
       primaryColor: Color(0xffd40000),
       accentColor: Color(0xffed1414),
-      //accentColor: Color(0xfff21a1a)
-      //accentColor: Color(0xffff4400)
+      textSelectionHandleColor: Colors.black54,
     ),
   ));
 }

@@ -1,7 +1,6 @@
 import 'package:api_zabbix/Api.dart';
 import 'package:api_zabbix/screens/HomePage.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     //var _scaffoldKey = new GlobalKey<ScaffoldState>();
     BuildContext _scaffoldContext;
-
     return Scaffold(
       body: Builder(
         builder: (BuildContext context){
@@ -55,10 +53,11 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _urlController,
                         keyboardType: TextInputType.url,
                         obscureText: false,
+                        cursorColor: Colors.black54,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          filled: true,
-                          fillColor: Colors.white,
+                            filled: true,
+                            fillColor: Colors.white,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(32)
                             ),
@@ -69,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: EdgeInsets.only(top: 8, bottom: 8),
                         child: TextField(
+                          cursorColor: Colors.black54,
                           controller: _userController,
                           keyboardType: TextInputType.url,
                           decoration: InputDecoration(
@@ -86,7 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                         controller: __passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,
+                        cursorColor: Colors.black54,
                         decoration: InputDecoration(
+                            focusColor: Colors.black54,
                             filled: true,
                             fillColor: Colors.white,
                             contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
